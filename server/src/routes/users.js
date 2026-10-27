@@ -2,22 +2,28 @@ import express from 'express';
 import { pool } from '../../db/db.js';
 import { verifyToken } from '../middleware/verifyToken.js';
 import { CreateUserSchema, UpdateUserSchema } from '../../schemas/users.js';
+import { requireRole } from '../middleware/requireRole.js';
 
 const usersRouter = express.Router();
 
-usersRouter.get('/', verifyToken, async (req, res) => {
-  try {
-    const data = await pool.query('SELECT * FROM users');
-    res.status(200).send(data.rows);
-  } catch (err) {
-    res.status(400).json({ err: err });
-  }
-});
+usersRouter.get(
+  '/',
+  verifyToken,
+  requireRole('spectator'),
+  async (req, res) => {
+    try {
+      const data = await pool.query('SELECT * FROM users');
+      res.status(200).send(data.rows);
+    } catch (err) {
+      res.status(400).json({ err: err });
+    }
+  },
+);
 
 // creates a user if uid is missing but does nothing if the uid does exist. Idempotent.
 usersRouter.put('/me', verifyToken, async (req, res) => {
   try {
-    const uid = req.user.uid.uid;
+    const uid = req.user.uid;
     const raw = CreateUserSchema.safeParse(req.body);
 
     if (!raw.success) {
@@ -47,7 +53,7 @@ usersRouter.put('/me', verifyToken, async (req, res) => {
 
 usersRouter.patch('/me', verifyToken, async (req, res) => {
   try {
-    const uid = req.user.uid.uid;
+    const uid = req.user.uid;
     const raw = UpdateUserSchema.safeParse(req.body);
 
     if (!raw.success) {
@@ -85,7 +91,7 @@ usersRouter.delete('/me', verifyToken, async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const uid = req.user.uid.uid;
+    const uid = req.user.uid;
 
     const data = await pool.query(
       `

@@ -9,13 +9,13 @@ async function verifyToken(req, res, next) {
     }
 
     const token = authHeader.slice(7);
-    const uid = await auth.verifyIdToken(token);
+    const decoded = await auth.verifyIdToken(token);
 
-    if (!uid) {
+    if (!decoded) {
       throw new Error('Not Authorized');
     }
 
-    req.user = { uid: uid };
+    req.user = { uid: decoded.uid };
     next();
   } catch (err) {
     res.status(401).json({ error: err });

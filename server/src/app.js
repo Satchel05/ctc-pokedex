@@ -22,7 +22,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api/me', verifyToken, (req, res) => {
-  res.json({ identity: req.user.uid.uid });
+  res.json({ identity: req.user.uid });
 });
 
 app.use('/users', usersRouter);

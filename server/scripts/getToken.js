@@ -1,6 +1,6 @@
 import { auth } from '../src/lib/firebaseAdmin.js';
 
-const myToken = await auth.createCustomToken('123456789');
+const myToken = await auth.createCustomToken('elliottescalante');
 
 const res = await fetch(
   `https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=${process.env.FIREBASE_WEB_API_KEY}`,
