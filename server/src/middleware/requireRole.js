@@ -13,14 +13,16 @@ function requireRole(allowedRole) {
       const hasRole = role.rows[0]?.role === allowedRole;
 
       if (!hasRole) {
-        throw new Error('Not Authorized');
+        throw new Error(
+          `Role ${role.rows[0]?.role} Not Authorized. Requires ${allowedRole}`,
+        );
       }
 
       req.user.role = role;
 
       next();
     } catch (err) {
-      res.status(403).json({ error: err });
+      res.status(403).json({ err: err.message });
     }
   };
 }

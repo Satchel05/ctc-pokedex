@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { pool } from '../db/db.js';
 import { usersRouter } from './routes/users.js';
+import { teamsRouter } from './routes/teams.js';
 import { verifyToken } from './middleware/verifyToken.js';
 
 dotenv.config({ path: new URL('../db/.env', import.meta.url) });
@@ -26,6 +27,7 @@ app.get('/api/me', verifyToken, (req, res) => {
 });
 
 app.use('/users', usersRouter);
+app.use('/teams', teamsRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
