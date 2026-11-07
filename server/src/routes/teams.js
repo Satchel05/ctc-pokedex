@@ -6,8 +6,6 @@ import { requireRole } from '../middleware/requireRole.js';
 
 const teamsRouter = express.Router();
 
-// the trainer's pokemon (user_pokemon), with each pokemon's base stats
-// (HP, Attack, Defense, Sp. Atk, Sp. Def, Speed) in stat id order and their total
 teamsRouter.get('/', verifyToken, requireRole('trainer'), async (req, res) => {
   try {
     const data = await pool.query(
