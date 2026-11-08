@@ -1,39 +1,65 @@
-import { Card, Image, Button, Badge, Progress, HStack } from '@chakra-ui/react';
+import {
+  Card,
+  Image,
+  Button,
+  Badge,
+  Progress,
+  HStack,
+  Wrap,
+} from '@chakra-ui/react';
+
+// Highest possible base stat in the games; used to scale the progress bars.
+const MAX_BASE_STAT = 255;
 
 export const PokemonCard = ({ pokemon }) => {
-  const { name, spriteURL, types, numeral, abilities, hp, attack, defense } =
-    pokemon;
-
-  const stats = { hp, attack, defense };
+  const { id, name, sprite_url, types, stats, abilities } = pokemon;
 
   return (
     <Card.Root>
-      <Card.Header>#{numeral}</Card.Header>
+      <Card.Header>#{id}</Card.Header>
       <Card.Body>
         <Image
           boxSize='150px'
-          src={spriteURL}
+          src={sprite_url}
+          alt={name}
         />
-        <Card.Title>{name}</Card.Title>
-        {types.map((type) => (
-          <Badge key={type}>{type}</Badge>
+        <Card.Title textTransform='capitalize'>{name}</Card.Title>
+
+        <Wrap gap='2' my='2'>
+          {types.map((type) => (
+            <Badge key={type.id}>{type.name}</Badge>
+          ))}
+        </Wrap>
+
+        {stats.map((stat) => (
+          <Progress.Root
+            key={stat.id}
+            value={stat.base_stat}
+            max={MAX_BASE_STAT}
+            size='sm'
+          >
+            <HStack gap='5'>
+              <Progress.Label minW='9rem'>{stat.name}</Progress.Label>
+              <Progress.Track flex='1'>
+                <Progress.Range />
+              </Progress.Track>
+              <Progress.ValueText>{stat.base_stat}</Progress.ValueText>
+            </HStack>
+          </Progress.Root>
         ))}
-        {Object.entries(stats).map(([label, value]) => {
-          return (
-            <Progress.Root>
-              <HStack gap='5'>
-                <Progress.Label>{label}</Progress.Label>
-                <Progress.Track flex='1'>
-                  <Progress.Range />
-                </Progress.Track>
-                <Progress.ValueText>{value}</Progress.ValueText>
-              </HStack>
-            </Progress.Root>
-          );
-        })}
-        {abilities.map((ability) => (
-          <Badge key={ability}>{ability}</Badge>
-        ))}
+
+        <Wrap gap='2' mt='3'>
+          {abilities.map((ability) => (
+            <Badge
+              key={ability.id}
+              variant='outline'
+              colorPalette={ability.is_hidden ? 'purple' : 'gray'}
+            >
+              {ability.name}
+              {ability.is_hidden && ' (hidden)'}
+            </Badge>
+          ))}
+        </Wrap>
       </Card.Body>
 
       <Card.Footer>

@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { pool } from '../db/db.js';
 import { usersRouter } from './routes/users.js';
 import { teamsRouter } from './routes/teams.js';
+import { pokemonRouter } from './routes/pokemon.js';
 import { verifyToken } from './middleware/verifyToken.js';
 
 dotenv.config({ path: new URL('../db/.env', import.meta.url) });
@@ -28,6 +29,7 @@ app.get('/api/me', verifyToken, (req, res) => {
 
 app.use('/users', usersRouter);
 app.use('/teams', teamsRouter);
+app.use('/pokemon', pokemonRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

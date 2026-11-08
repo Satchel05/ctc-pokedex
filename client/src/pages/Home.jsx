@@ -1,49 +1,54 @@
 import { PokemonCard } from '../components/PokemonCard';
+import { useState, useEffect } from 'react';
+import { Alert, CloseButton } from '@chakra-ui/react';
+import { backend } from '../lib/backend';
+import { useApiError } from '../lib/useApiError';
 
-const pokemonList = [
-  {
-    name: 'Bulbasaur',
-    spriteURL:
-      'https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0001.png',
-    types: ['Grass', 'Poison'],
-    numeral: 1,
-    abilities: ['Overgrow', 'Chlorophyll'],
-    hp: 45,
-    attack: 49,
-    defense: 49,
-  },
-  {
-    name: 'Charmander',
-    spriteURL:
-      'https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0004.png',
-    types: ['Fire'],
-    numeral: 4,
-    abilities: ['Blaze', 'Solar Power'],
-    hp: 39,
-    attack: 52,
-    defense: 43,
-  },
-  {
-    name: 'Squirtle',
-    spriteURL:
-      'https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/0007.png',
-    types: ['Water'],
-    numeral: 7,
-    abilities: ['Rain Dish', 'Torrent'],
-    hp: 44,
-    attack: 48,
-    defense: 65,
-  },
-];
+const fetchPokemon = async (callback) => {
+  try {
+    const response = await backend.get('/pokemon');
+    console.log(response.data);
+    callback(response.data);
+  } catch {
+    // The failure is already emitted by the backend interceptor and shown via useApiError.
+  }
+};
 
 export default function Home() {
+  const [pokemonList, setPokemonList] = useState([]);
+  const [apiError, clearApiError] = useApiError();
+
+  useEffect(() => {
+    fetchPokemon(setPokemonList);
+  }, []);
+
   return (
     <>
       <h1>This is the home page.</h1>
 
+      {apiError && (
+        <Alert.Root status='error'>
+          <Alert.Indicator />
+          <Alert.Content>
+            <Alert.Title>
+              {apiError.status ?
+                `Request failed (${apiError.status})`
+              : 'Request failed'}
+            </Alert.Title>
+            <Alert.Description>{apiError.message}</Alert.Description>
+          </Alert.Content>
+          <CloseButton
+            onClick={clearApiError}
+            pos='relative'
+            top='-2'
+            insetEnd='-2'
+          />
+        </Alert.Root>
+      )}
+
       {pokemonList.map((pokemon) => (
         <PokemonCard
-          key={pokemon.numeral}
+          key={pokemon.id}
           pokemon={pokemon}
         />
       ))}
