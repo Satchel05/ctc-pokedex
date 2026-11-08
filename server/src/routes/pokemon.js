@@ -3,7 +3,9 @@ import { pool } from '../../db/db.js';
 
 const pokemonRouter = express.Router();
 
-// Returns every pokemon with its columns and related types, stats, and abilities (per the ERD).
+const POKEMON_LIMIT = 100;
+
+// Returns the first 100 pokemon (by id) with their columns and related types, stats, and abilities (per the ERD).
 // Related rows are aggregated in subqueries so the one-to-many joins don't multiply each other.
 pokemonRouter.get('/', async (req, res) => {
   try {
@@ -48,8 +50,10 @@ pokemonRouter.get('/', async (req, res) => {
           WHERE pa.pokemon_id = p.id
         ), '[]') AS abilities
       FROM pokemon p
-      ORDER BY p.id;
+      ORDER BY p.id
+      LIMIT $1;
       `,
+      [POKEMON_LIMIT],
     );
     res.status(200).json(data.rows);
   } catch (err) {
