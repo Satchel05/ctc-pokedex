@@ -1,0 +1,131 @@
+/*
+  Layer order: Chakra's layers first, Tailwind's after, so Tailwind classes
+  override Chakra's defaults. The chakra-* names are set in components/ui/provider.jsx.
+*/
+@layer theme, chakra-reset, chakra-base, chakra-tokens, chakra-recipes, base, components, utilities;
+
+@import 'tailwindcss';
+
+/* `dark:` follows the .dark class next-themes puts on <html> (same as Chakra). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+  App colour tokens. Use them as normal Tailwind colours:
+  bg-surface, text-ink, border-line, ...
+  Dark mode: the .dark overrides below swap the values,
+  so components never need `dark:` variants for these.
+*/
+@theme {
+  --color-page: #ffffff;
+  --color-surface: #ffffff;
+  --color-subtle: #edf2f7;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e0;
+  --color-ink: #1a202c;
+  --color-ink-strong: #2d3748;
+  --color-ink-body: #4a5568;
+  --color-ink-muted: #718096;
+
+  --animate-pokeball-spin: pokeball-spin 1.2s cubic-bezier(0.6, 0, 0.3, 1) infinite;
+  --animate-pokeball-pulse: pokeball-pulse 1.2s ease-in-out infinite;
+
+  @keyframes pokeball-spin {
+    0% { transform: rotate(0deg); }
+    20% { transform: rotate(-14deg); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes pokeball-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+}
+
+/*
+  Pokémon type colours: the fallback card tint when art sampling isn't available.
+  PokemonCard reads them as var(--type-<name>).
+*/
+:root {
+  --type-normal: #718096;
+  --type-fire: #DD6B20;
+  --type-water: #3182CE;
+  --type-electric: #D69E2E;
+  --type-grass: #38A169;
+  --type-ice: #00A3C4;
+  --type-fighting: #C53030;
+  --type-poison: #805AD5;
+  --type-ground: #B7791F;
+  --type-flying: #4299E1;
+  --type-psychic: #D53F8C;
+  --type-bug: #2F855A;
+  --type-rock: #975A16;
+  --type-ghost: #6B46C1;
+  --type-dragon: #2C7A7B;
+  --type-dark: #4A5568;
+  --type-steel: #718096;
+  --type-fairy: #ED64A6;
+
+  /* card-tint strengths (light) */
+  --tint-radial: 24%;
+  --tint-top: 14%;
+  --tint-mid: 5%;
+  --tint-radar: 16%;
+}
+
+.dark {
+  --type-normal: #A0AEC0;
+  --type-fire: #F6AD55;
+  --type-water: #63B3ED;
+  --type-electric: #F6E05E;
+  --type-grass: #68D391;
+  --type-ice: #76E4F7;
+  --type-fighting: #FC8181;
+  --type-poison: #B794F4;
+  --type-ground: #F6AD55;
+  --type-flying: #90CDF4;
+  --type-psychic: #F687B3;
+  --type-bug: #9AE6B4;
+  --type-rock: #D69E2E;
+  --type-ghost: #B794F4;
+  --type-dragon: #4FD1C5;
+  --type-dark: #CBD5E0;
+  --type-steel: #CBD5E0;
+  --type-fairy: #FBB6CE;
+
+  --tint-radial: 30%;
+  --tint-top: 20%;
+  --tint-mid: 8%;
+  --tint-radar: 22%;
+
+  --color-page: #111111;
+  --color-surface: #1a202c;
+  --color-subtle: #2d3748;
+  --color-line: #2d3748;
+  --color-line-strong: #4a5568;
+  --color-ink: #f7fafc;
+  --color-ink-strong: #e2e8f0;
+  --color-ink-body: #cbd5e0;
+  --color-ink-muted: #a0aec0;
+}
+
+/*
+  Card background tinted by two colours set on the element:
+  --c1 (primary) and --c2 (secondary). Also exposes --c1-fill for the radar.
+*/
+@utility card-tint {
+  --c1-fill: color-mix(in srgb, var(--c1) var(--tint-radar), transparent);
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 22%, color-mix(in srgb, var(--c1) var(--tint-radial), transparent) 0%, transparent 70%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--c2) var(--tint-top), transparent) 0%,
+      color-mix(in srgb, var(--c1) var(--tint-mid), transparent) 50%,
+      var(--color-surface) 100%
+    ),
+    var(--color-surface);
+}
+
+@layer base {
+  body {
+    @apply bg-page text-ink antialiased;
+  }
+}

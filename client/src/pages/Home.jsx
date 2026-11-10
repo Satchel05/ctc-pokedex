@@ -1,57 +1,46 @@
 import { PokemonCard } from '../components/PokemonCard';
-import { useState, useEffect } from 'react';
-import { Alert, CloseButton } from '@chakra-ui/react';
+import { PokemonGrid } from '../components/PokemonGrid';
+import { PageContainer } from '../components/PageContainer';
+import { PageHero } from '../components/PageHero';
+import { PokeballLoader } from '../components/PokeballLoader';
 import { backend } from '../lib/backend';
-import { useApiError } from '../lib/useApiError';
+import { Box } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
 
-const fetchPokemon = async (callback) => {
-  try {
-    const response = await backend.get('/pokemon');
-    console.log(response.data);
-    callback(response.data);
-  } catch {
-    // The failure is already emitted by the backend interceptor and shown via useApiError.
-  }
-};
-
-export default function Home() {
-  const [pokemonList, setPokemonList] = useState([]);
-  const [apiError, clearApiError] = useApiError();
+export default function Home({ pokemonTeam, setPokemonTeam }) {
+  const [pokemonList, setPokemonList] = useState(null);
 
   useEffect(() => {
-    fetchPokemon(setPokemonList);
+    const getPokemon = async () => {
+      const response = await backend.get('/pokemon');
+      setPokemonList(response.data);
+    };
+
+    getPokemon();
   }, []);
 
   return (
-    <>
-      <h1>This is the home page.</h1>
+    <PageContainer className='pb-24'>
+      <PageHero
+        title='Find your next six.'
+        subtitle='Compare base stats and build a team of six.'
+      />
 
-      {apiError && (
-        <Alert.Root status='error'>
-          <Alert.Indicator />
-          <Alert.Content>
-            <Alert.Title>
-              {apiError.status ?
-                `Request failed (${apiError.status})`
-              : 'Request failed'}
-            </Alert.Title>
-            <Alert.Description>{apiError.message}</Alert.Description>
-          </Alert.Content>
-          <CloseButton
-            onClick={clearApiError}
-            pos='relative'
-            top='-2'
-            insetEnd='-2'
-          />
-        </Alert.Root>
-      )}
-
-      {pokemonList.map((pokemon) => (
-        <PokemonCard
-          key={pokemon.id}
-          pokemon={pokemon}
-        />
-      ))}
-    </>
+      <Box className='pt-12'>
+        {pokemonList ?
+          <PokemonGrid>
+            {pokemonList.map((pokemon) => (
+              <PokemonCard
+                key={pokemon.id}
+                pokemon={pokemon}
+                onToggleTeam={() => {
+                  setPokemonTeam([...pokemonTeam, pokemon]);
+                }}
+              />
+            ))}
+          </PokemonGrid>
+        : <PokeballLoader />}
+      </Box>
+    </PageContainer>
   );
 }

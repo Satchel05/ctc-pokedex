@@ -13,7 +13,7 @@ teamsRouter.get('/', verifyToken, requireRole('trainer'), async (req, res) => {
       SELECT
         p.id AS pokemon_id,
         p.name,
-        p.sprite_url,
+        p.artwork_url AS sprite_url,
         p.artwork_url,
         p.artwork_hq_url,
         up.added_at,

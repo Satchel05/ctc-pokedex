@@ -1,12 +1,11 @@
 import express from 'express';
 import { pool } from '../../db/db.js';
+import { verifyToken } from '../middleware/verifyToken.js';
 
 const pokemonRouter = express.Router();
 
 const POKEMON_LIMIT = 100;
 
-// Returns the first 100 pokemon (by id) with their columns and related types, stats, and abilities (per the ERD).
-// Related rows are aggregated in subqueries so the one-to-many joins don't multiply each other.
 pokemonRouter.get('/', async (req, res) => {
   try {
     const data = await pool.query(
@@ -18,7 +17,7 @@ pokemonRouter.get('/', async (req, res) => {
         p.weight,
         p.base_experience,
         p.is_default,
-        p.sprite_url,
+        p.artwork_url AS sprite_url,
         p.artwork_url,
         p.artwork_hq_url,
         p.created_at,
