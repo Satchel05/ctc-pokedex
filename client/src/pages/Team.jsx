@@ -9,8 +9,7 @@ export default function Home({ pokemonTeam }) {
   return (
     <PageContainer className='pb-24'>
       <PageHero
-        title='Find your next six.'
-        subtitle='Compare base stats and build a team of six.'
+        title='Team'
       />
 
       <Box className='pt-12'>

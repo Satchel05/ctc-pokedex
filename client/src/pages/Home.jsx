@@ -23,7 +23,6 @@ export default function Home({ pokemonTeam, setPokemonTeam }) {
     <PageContainer className='pb-24'>
       <PageHero
         title='Find your next six.'
-        subtitle='Compare base stats and build a team of six.'
       />
 
       <Box className='pt-12'>
