@@ -2,27 +2,19 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Team from './pages/Team';
 import { NavBar } from './components/NavBar';
-import { useState } from 'react';
 
 function App() {
-  const [pokemonTeam, setPokemonTeam] = useState([]);
-
   return (
     <BrowserRouter>
       <NavBar />
       <Routes>
         <Route
           path='/'
-          element={
-            <Home
-              pokemonTeam={pokemonTeam}
-              setPokemonTeam={setPokemonTeam}
-            />
-          }
+          element={<Home />}
         />
         <Route
           path='/team'
-          element={<Team pokemonTeam={pokemonTeam} />}
+          element={<Team />}
         />
       </Routes>
     </BrowserRouter>
