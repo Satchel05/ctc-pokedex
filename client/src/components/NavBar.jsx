@@ -4,11 +4,10 @@ import { PageContainer } from './PageContainer';
 import { TeamButton } from './TeamButton';
 import logo from '../assets/ctc-logo-purple.svg';
 import logoLight from '../assets/ctc-logo-purple-light.svg';
-import { useAuth } from '../contexts/AuthContext';
+// TODO: import useAuth hook here
 
-// Primary nav: logo + wordmark on the left, Team pill on the right.
 export const NavBar = ({ teamCount = 0 }) => {
-  const { user, loading, login, logout } = useAuth();
+  // TODO: destructure useAuth methods here
 
   return (
     <nav
@@ -33,27 +32,24 @@ export const NavBar = ({ teamCount = 0 }) => {
               Pokédex
             </span>
           </Link>
-          {!loading && (
-            <div className='flex items-center gap-3'>
-              {user ?
-                <>
-                  <TeamButton count={teamCount} />
-                  <Button
-                    variant='ghost'
-                    onClick={logout}
-                    className='h-10 cursor-pointer rounded-full px-3.5 text-sm font-semibold text-ink-body hover:bg-subtle'>
-                    Sign out
-                  </Button>
-                </>
-              : <Button
-                  variant='outline'
-                  onClick={login}
-                  className='h-10 cursor-pointer rounded-full border border-line bg-surface px-4 text-sm font-semibold text-ink transition-colors hover:border-line-strong hover:bg-subtle active:scale-[0.97]'>
-                  Sign in
-                </Button>
-              }
-            </div>
-          )}
+          {/* {!loading && ( */}
+          <div className='flex items-center gap-3'>
+            {/* TODO: conditionally render buttons based on if user is logged in or not */}
+            <>
+              <TeamButton count={teamCount} />
+              <Button
+                variant='ghost'
+                className='h-10 cursor-pointer rounded-full px-3.5 text-sm font-semibold text-ink-body hover:bg-subtle'>
+                Sign out
+              </Button>
+            </>
+            <Button
+              variant='outline'
+              className='h-10 cursor-pointer rounded-full border border-line bg-surface px-4 text-sm font-semibold text-ink transition-colors hover:border-line-strong hover:bg-subtle active:scale-[0.97]'>
+              Sign in
+            </Button>
+          </div>
+          {/* )} */}
         </div>
       </PageContainer>
     </nav>

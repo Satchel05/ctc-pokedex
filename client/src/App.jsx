@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Team from './pages/Team';
 import { NavBar } from './components/NavBar';
-import { ProtectedRoute } from './components/ProtectedRoute';
+// import { ProtectedRoute } from './components/ProtectedRoute';
 import { useState } from 'react';
 
 function App() {
@@ -24,9 +24,9 @@ function App() {
         <Route
           path='/team'
           element={
-            <ProtectedRoute>
-              <Team pokemonTeam={pokemonTeam} />
-            </ProtectedRoute>
+            // <ProtectedRoute>
+            <Team pokemonTeam={pokemonTeam} />
+            // </ProtectedRoute>
           }
         />
       </Routes>
